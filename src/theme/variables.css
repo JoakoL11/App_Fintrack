@@ -1,2 +1,23 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+:root {
+    --menu-background: #ffffff;
+    --menu-item-background: #f9f9f9;
+    --menu-item-hover-background: #e0e0e0;
+    --main-content-background-open: rgba(0, 0, 0, 0.1);
+  }
+  
+  .menu-open {
+    background-color: var(--main-content-background-open);
+  }
+  
+  ion-menu {
+    --background: var(--menu-background);
+  }
+  
+  ion-menu ion-item {
+    --background: var(--menu-item-background);
+  }
+  
+  ion-menu ion-item:hover {
+    --background: var(--menu-item-hover-background);
+  }
+  
