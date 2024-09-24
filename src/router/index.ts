@@ -6,34 +6,48 @@ import BudgetPage from '@/views/BudgetPage.vue';
 import ReportsPage from '@/views/ReportsPage.vue';
 import TransactionsPage from '@/views/TransactionsPage.vue';
 import InvestmentPage from '@/views/InvestmentPage.vue';
-
-
+import RegisterPage from '@/views/RegisterPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
+    path: '/',
+    redirect: '/home' // Redirige a /home
+  },
+  {
     path: '/home',
     name: 'Home',
-    component: HomePage},
+    component: HomePage
+  },
   {
     path: '/login',
     name: 'Login',
-    component: LoginPage},
+    component: LoginPage
+  },
   {
     path: '/budget',
     name: 'Budget',
-    component: BudgetPage},
+    component: BudgetPage
+  },
   {
     path: '/transactions',
     name: 'Transactions',
-    component: TransactionsPage},
+    component: TransactionsPage
+  },
   {
     path: '/investment',
     name: 'Investment',
-    component: InvestmentPage},
+    component: InvestmentPage
+  },
   {
     path: '/reports',
     name: 'Reports',
-    component: ReportsPage}
+    component: ReportsPage
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterPage
+  }
 ];
 
 const router = createRouter({

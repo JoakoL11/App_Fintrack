@@ -18,7 +18,7 @@
 
           <ion-item button @click="navigateTo('/home')">
             <ion-thumbnail slot="start">
-              <img alt="Inicio" src="C:\Users\Alumno\Downloads\new\img\inicio.png" />
+              <img alt="Inicio" src="..\..\img\inicio.png" />
             </ion-thumbnail>
             <ion-label>Inicio</ion-label>
           </ion-item>
@@ -26,14 +26,14 @@
 
           <ion-item button @click="navigateTo('/investment')">
             <ion-thumbnail slot="start">
-              <img alt="Investments" src="C:\Users\Alumno\Downloads\new\img\investment.png" />
+              <img alt="Investments" src="..\..\\img\investment.png" />
             </ion-thumbnail>
             <ion-label>inversion</ion-label>
           </ion-item>
 
           <ion-item button @click="navigateTo('/budget')">
             <ion-thumbnail slot="start">
-              <img alt="Investments" src="C:\Users\Alumno\Downloads\new\img\budget.png" />
+              <img alt="Investments" src="..\..\\img\budget.png" />
             </ion-thumbnail>
             <ion-label>presupuesto</ion-label>
           </ion-item>
@@ -41,7 +41,7 @@
 
           <ion-item button @click="navigateTo('/transactions')">
             <ion-thumbnail slot="start">
-              <img alt="Transactions" src="C:\Users\Alumno\Downloads\new\img\transactions.png" />
+              <img alt="Transactions" src="..\..\\img\transactions.png" />
             </ion-thumbnail>
             <ion-label>Transacciones</ion-label>
           </ion-item>
@@ -49,7 +49,7 @@
         
           <ion-item button @click="navigateTo('/reports')">
             <ion-thumbnail slot="start">
-              <img alt="Repots" src="C:\Users\Alumno\Downloads\new\img\reports.png" />
+              <img alt="Repots" src="..\..\\img\reports.png" />
             </ion-thumbnail>
             <ion-label>Reportes</ion-label>
           </ion-item>
