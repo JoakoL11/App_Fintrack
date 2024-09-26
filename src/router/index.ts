@@ -7,11 +7,12 @@ import ReportsPage from '@/views/ReportsPage.vue';
 import TransactionsPage from '@/views/TransactionsPage.vue';
 import InvestmentPage from '@/views/InvestmentPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
+import ProfilePage from '@/views/ProfilePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home' // Redirige a /home
+    redirect: '/home'
   },
   {
     path: '/home',
@@ -47,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'Register',
     component: RegisterPage
+  },
+  {
+    path: '/profile', 
+    name: 'Profile',
+    component: ProfilePage 
   }
 ];
 
