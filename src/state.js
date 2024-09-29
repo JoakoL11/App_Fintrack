@@ -11,7 +11,7 @@ export const state = reactive({
   ],
   budgets: [
     {
-      description: 'Gastos mensuales', amount: 2000}
+      description: 'Gastos mensuales', amount: 2000, date: new Date('2024-09-01')}
     
   ],
   // supuestamente aqui se guarda el presupuesto
