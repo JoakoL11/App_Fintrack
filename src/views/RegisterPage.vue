@@ -2,10 +2,11 @@
   <ion-page>
     <ion-content class="ion-padding" style="--background: url('https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2018/01/24115423/Economia-Day-5.jpg') no-repeat center center / cover;">
       <div class="form-container">
-        <div class="title-box"> <!-- Contenedor para el título -->
+        <div class="title-box">
           <h1>Crear una Cuenta</h1>
         </div>
-        <div class="form-box"> <!-- Recuadro alrededor del formulario -->
+        <div class="form-box">
+          <!-- Campo Nombre -->
           <ion-item class="custom-item" :class="{ 'error-item': nameError, 'success-item': nameValid }">
             <ion-input
               v-model="name"
@@ -13,11 +14,13 @@
               type="text"
               label-placement="floating"
               placeholder="Ingresa tu nombre"
+              @ionBlur="validateName"  
             ></ion-input>
           </ion-item>
           <p v-if="nameError" class="error-message">{{ nameError }}</p>
           <p v-if="nameValid" class="success-message">Nombre válido</p>
 
+          <!-- Campo Email -->
           <ion-item class="custom-item" :class="{ 'error-item': emailError, 'success-item': emailValid }">
             <ion-input
               v-model="email"
@@ -25,11 +28,13 @@
               type="email"
               label-placement="floating"
               placeholder="Ingresa tu correo"
+              @ionBlur="validateEmail" 
             ></ion-input>
           </ion-item>
           <p v-if="emailError" class="error-message">{{ emailError }}</p>
           <p v-if="emailValid" class="success-message">Email válido</p>
 
+          <!-- Campo Teléfono -->
           <ion-item class="custom-item" :class="{ 'error-item': phoneError, 'success-item': phoneValid }">
             <ion-input
               v-model="phone"
@@ -37,11 +42,13 @@
               type="tel"
               label-placement="floating"
               placeholder="987654321"
+              @ionBlur="validatePhone" 
             ></ion-input>
           </ion-item>
           <p v-if="phoneError" class="error-message">{{ phoneError }}</p>
           <p v-if="phoneValid" class="success-message">Teléfono válido</p>
 
+          <!-- Campo Contraseña -->
           <ion-item class="custom-item" :class="{ 'error-item': passwordError, 'success-item': passwordValid }">
             <ion-input
               v-model="password"
@@ -49,6 +56,7 @@
               type="password"
               label-placement="floating"
               placeholder="Ingresa tu contraseña"
+              @ionBlur="validatePassword" 
             >
               <ion-input-password-toggle slot="end"></ion-input-password-toggle>
             </ion-input>
@@ -56,9 +64,12 @@
           <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
           <p v-if="passwordValid" class="success-message">Contraseña válida</p>
 
+          <!-- Botón Registrar -->
           <ion-button type="submit" shape="round" expand="block" @click="register" class="register-button">
             Registrar
           </ion-button>
+
+          <!-- Botón Volver al Login -->
           <ion-button shape="round" expand="block" fill="outline" @click="goToLogin" class="login-button">
             Volver al Login
           </ion-button>
@@ -68,10 +79,11 @@
   </ion-page>
 </template>
 
-<script>
+<script >
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IonContent, IonButton, IonInput, IonItem, IonInputPasswordToggle, IonPage, alertController } from '@ionic/vue';
+
 // Recuperar los usuarios de localStorage o iniciar un arreglo vacío si no hay datos
 const users = JSON.parse(localStorage.getItem('users')) || [];
 
@@ -126,61 +138,71 @@ export default {
       await alert.present();
     };
 
-    const register = async () => {
-      // Reiniciar errores y validaciones
-      nameError.value = '';
-      emailError.value = '';
-      phoneError.value = '';
-      passwordError.value = '';
-
-      nameValid.value = false;
-      emailValid.value = false;
-      phoneValid.value = false;
-      passwordValid.value = false;
-
-      // Validación de los campos
+    // Validación de campos individuales cuando el usuario pierde el foco
+    const validateName = () => {
       if (!name.value) {
         nameError.value = "Por favor, ingresa tu nombre.";
+        nameValid.value = false;
       } else {
-        nameValid.value = true; // Campo válido
+        nameError.value = '';
+        nameValid.value = true;
       }
+    };
 
+    const validateEmail = () => {
       if (!email.value) {
         emailError.value = "Por favor, ingresa tu correo electrónico.";
+        emailValid.value = false;
       } else {
-        // Validación del formato del email
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(email.value)) {
           emailError.value = "Por favor, ingresa un correo electrónico válido.";
+          emailValid.value = false;
         } else {
-          emailValid.value = true; // Campo válido
+          emailError.value = '';
+          emailValid.value = true;
         }
       }
+    };
 
+    const validatePhone = () => {
       if (!phone.value) {
         phoneError.value = "Por favor, ingresa tu número de teléfono.";
+        phoneValid.value = false;
       } else {
-        // Validación del formato del teléfono (opcional)
-        const phonePattern = /^[0-9]{9,15}$/; // Acepta entre 9 y 15 dígitos
+        const phonePattern = /^[0-9]{9,15}$/;
         if (!phonePattern.test(phone.value)) {
           phoneError.value = "Por favor, ingresa un número de teléfono válido (9 a 15 dígitos).";
+          phoneValid.value = false;
         } else {
-          phoneValid.value = true; // Campo válido
+          phoneError.value = '';
+          phoneValid.value = true;
         }
       }
+    };
 
+    const validatePassword = () => {
       if (!password.value) {
         passwordError.value = "Por favor, ingresa tu contraseña.";
+        passwordValid.value = false;
       } else {
-        passwordValid.value = true; // Campo válido
+        passwordError.value = '';
+        passwordValid.value = true;
       }
+    };
+
+    // Registro de usuario cuando se completan todas las validaciones
+    const register = async () => {
+      validateName();
+      validateEmail();
+      validatePhone();
+      validatePassword();
 
       // Verificar si hay errores
-      if (nameError.value || emailError.value || phoneError.value || passwordError.value) {
+      if (!nameValid.value || !emailValid.value || !phoneValid.value || !passwordValid.value) {
         return; // Si hay errores, no continuar
       }
 
-      // Registrar el usuario y mostrar alerta
       const result = registerUser(name.value, email.value, phone.value, password.value);
       if (result.error) {
         await showAlert(result.error);
@@ -194,10 +216,17 @@ export default {
       router.push('/login'); // Cambia a la página de login
     };
 
-    return { name, email, phone, password, register, goToLogin, nameError, emailError, phoneError, passwordError, nameValid, emailValid, phoneValid, passwordValid };
+    return { 
+      name, email, phone, password, 
+      register, goToLogin, 
+      nameError, emailError, phoneError, passwordError, 
+      nameValid, emailValid, phoneValid, passwordValid,
+      validateName, validateEmail, validatePhone, validatePassword 
+    };
   }
 };
 </script>
+
 
 <style scoped>
 
@@ -234,7 +263,7 @@ h1 {
   margin-bottom: 15px; /* espacio entre campos */
   --min-height: 50px; /* reduce el tamaño del input */
   --border-radius: 20px; /* bordes redondeados */
-  --background: rgba(224, 224, 224, 0.984); /* Fondo blanco para los inputs */
+  --background: rgba(255, 255, 255, 0.984); /* Fondo blanco para los inputs */
   --padding-start: 12px;
   --padding-end: 12px;
 }
