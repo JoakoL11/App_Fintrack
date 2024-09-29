@@ -21,14 +21,14 @@
           <ion-thumbnail slot="start">
             <img alt="Investments" src="..\..\\img\inversion.png" />
           </ion-thumbnail>
-          <ion-label>inversion</ion-label>
+          <ion-label>Inversion</ion-label>
         </ion-item>
 
         <ion-item button @click="navigateTo('/budget')">
           <ion-thumbnail slot="start">
             <img alt="Investments" src="..\..\\img\presupuesto.png" />
           </ion-thumbnail>
-          <ion-label>presupuesto</ion-label>
+          <ion-label>Presupuesto</ion-label>
         </ion-item>
 
 
