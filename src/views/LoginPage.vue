@@ -116,7 +116,7 @@ export default {
       if (user) {
         await showAlert('Inicio de sesión exitoso!');
         // Aquí puedes redirigir al usuario a la página principal o de dashboard
-        router.push('/dashboard');
+        router.push('/home');
       } else {
         await showAlert('Correo o contraseña incorrectos.');
       }
