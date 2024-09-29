@@ -13,9 +13,10 @@
         <ion-input
           v-model="newBudget.description"
           placeholder="Descripción del presupuesto"
+          @ionInput="validateField('description')"
         ></ion-input>
       </ion-item>
-      <p v-if="errors.description" class="error-message">{{ errors.description }}</p>
+      <p v-if="errors.description" class="error-message">Por favor ingresa una descripción válida.</p>
 
       <ion-item>
         <ion-label position="stacked">Monto</ion-label>
@@ -23,10 +24,10 @@
           v-model.number="newBudget.amount"
           type="number"
           placeholder="Monto del presupuesto"
-          @input="validateAmount"
+          @ionInput="validateField('amount')"
         ></ion-input>
       </ion-item>
-      <p v-if="errors.amount" class="error-message">{{ errors.amount }}</p>
+      <p v-if="errors.amount" class="error-message">El monto debe ser mayor a 0.</p>
 
       <ion-button expand="full" @click="addBudget">Agregar Presupuesto</ion-button>
 
@@ -56,10 +57,29 @@
 
 <script setup>
 import { ref } from 'vue';
-import { state } from '../state'; // Asegúrate de tener el path correcto
+import { state } from '../state'; 
+
+// Importa todos los componentes de Ionic que utilizas
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton,
+  IonList,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent
+} from '@ionic/vue';
 
 // Lista de presupuestos desde el estado global
-const budgets = state.budgets;
+const budgets = ref(state.budgets || []);
 
 // Nuevo presupuesto a agregar
 const newBudget = ref({
@@ -70,57 +90,66 @@ const newBudget = ref({
 
 // Errores de validación
 const errors = ref({
-  description: '',
-  amount: ''
+  description: false,
+  amount: false
 });
 
 // Función para agregar presupuesto
 const addBudget = () => {
-  // Validación de campos
-  if (!newBudget.value.description || newBudget.value.description.length < 5) {
-    errors.value.description = 'La descripción debe tener al menos 5 caracteres.';
-    return;
-  } else {
-    errors.value.description = '';
+  // Limpiar errores previos
+  errors.value.description = false;
+  errors.value.amount = false;
+
+  // Validar campos
+  if (!newBudget.value.description.trim()) {
+    errors.value.description = true;
+  }
+  if (newBudget.value.amount <= 0 || isNaN(newBudget.value.amount)) {
+    errors.value.amount = true;
   }
 
-  if (newBudget.value.amount <= 0) {
-    errors.value.amount = 'El monto debe ser un número positivo.';
+  // Si hay errores, no continuar
+  if (errors.value.description || errors.value.amount) {
     return;
-  } else {
-    errors.value.amount = '';
   }
 
   // Agregar el nuevo presupuesto a la lista global de presupuestos
-  budgets.push({
+  budgets.value.push({
     ...newBudget.value,
-    date: new Date() // con esto se añade la fecha actual
+    date: new Date() // Añadir la fecha actual
   });
 
   // Limpiar el formulario
-  newBudget.value.description = '';
-  newBudget.value.amount = 0; // Reseteamos a 0
-};
-
-// Función para validar el monto
-const validateAmount = () => {
-  if (newBudget.value.amount < 0) {
-    errors.value.amount = 'El monto no puede ser negativo.';
-  } else {
-    errors.value.amount = '';
-  }
+  newBudget.value = {
+    description: '',
+    amount: 0,
+    date: new Date()
+  };
 };
 
 // Función para eliminar presupuesto
 const deleteBudget = (index) => {
-  budgets.splice(index, 1);
+  budgets.value.splice(index, 1);
 };
 
 // Función para formatear la moneda
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
 };
+
+// Función para validar campos en tiempo real
+const validateField = (field) => {
+  if (field === 'description' && newBudget.value.description.trim()) {
+    errors.value.description = false;
+  }
+  if (field === 'amount' && newBudget.value.amount > 0 && !isNaN(newBudget.value.amount)) {
+    errors.value.amount = false;
+  }
+};
 </script>
+
+
+
 
 <style scoped>
 ion-card {
