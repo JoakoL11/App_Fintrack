@@ -20,3 +20,5 @@ ion-menu ion-item {
 ion-menu ion-item:hover {
   --background: var(--menu-item-hover-background);
 }
+
+/* apenas usamos esto, intentemos usar mas esto para no repetir tanto codigo*/
