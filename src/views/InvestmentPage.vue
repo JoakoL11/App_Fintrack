@@ -40,6 +40,8 @@
             <ion-card-content>
               <p><strong>Monto:</strong> {{ formatCurrency(investment.amount) }}</p>
               <p><strong>Tipo:</strong> {{ investment.type }}</p>
+
+
               <!-- botón para eliminar inversión -->
               <ion-button color="danger" expand="block" @click="deleteInvestment(index)">Eliminar</ion-button>
             </ion-card-content>
@@ -86,14 +88,14 @@ const newInvestment = ref({
   date: new Date()
 });
 
-// función para agregar una nueva inversión
+// funcion para agregar una nueva inversion
 const addInvestment = () => {
   if (!newInvestment.value.name || !newInvestment.value.amount || !newInvestment.value.type) {
     alert('Por favor completa todos los campos.');
     return;
   }
 
-  // aregar una nueva inversión
+  // aregar una nueva inversion
   state.investments.push({
     ...newInvestment.value,
     date: new Date() // se coloca la fecha actual
@@ -107,10 +109,10 @@ const addInvestment = () => {
 
 // Función para eliminar una inversión
 const deleteInvestment = (index: number) => {
-  state.investments.splice(index, 1); // con esto se elimina de la lista de inversion
+  state.investments.splice(index, 1); // con esto se elimina de la lista de inversion NO LA BORREN
 };
 
-// función para formatear la moneda
+// funcion para formatear la moneda
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
 };
@@ -122,4 +124,5 @@ const investments = state.investments;
 ion-card {
   margin-bottom: 15px;
 }
+
 </style>
