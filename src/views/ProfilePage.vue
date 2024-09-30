@@ -38,17 +38,17 @@ import { ref } from 'vue';
 
 const username = ref('Usuario Ejemplo');
 const email = ref('usuario@ejemplo.com');
-const telefono = ref('123-456-7890');  // Cambié el tipo a string para teléfonos
+const telefono = ref('123-456-7890');  // Cambie el tipo a string para telefonos 'buena'dr
 
 const isEditing = ref(false);
 
 function toggleEdit() {
   if (isEditing.value) {
-    // Lógica para guardar cambios (actualizar datos en la base de datos o estado)
+    // logica para guardar cambios (actualizar datos en la base de datos o estado) ************************
     alert('Cambios guardados: ' + 
           `Usuario: ${username.value}, Email: ${email.value}, Teléfono: ${telefono.value}`);
   }
-  isEditing.value = !isEditing.value; // Cambiar estado de edición
+  isEditing.value = !isEditing.value; // vambiar estado de edicion   'como es esto?? 'dr
 }
 </script>
 
@@ -57,32 +57,32 @@ function toggleEdit() {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background-color: #ffffff; /* Fondo para el perfil */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para efecto de profundidad */
+  background-color: #ffffff; /* fondo para el perfil */
+  border-radius: 10px; /* bordes redondos */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* sombra para efecto de profundidad 7u7 */
 }
 
 .title-box {
-  text-align: center; /* Centrar el texto */
-  margin-bottom: 20px; /* Espacio debajo del título */
+  text-align: center; /* centrar el texto */
+  margin-bottom: 20px; /* espacio debajo del título */
 }
 
 h1 {
-  color: #333333; /* Color del texto del título */
+  color: #333333;
   font-size: 24px;
   font-weight: bold;
 }
 
 .info-box {
-  border: 1px solid #ccc; /* Borde del recuadro */
-  border-radius: 10px; /* Bordes redondeados */
-  padding: 20px; /* Espaciado interno */
-  background-color: #b1afaf; /* Fondo del recuadro */
-  margin-bottom: 20px; /* Espacio debajo del recuadro */
+  border: 1px solid #ccc; /* borde del recuadro */
+  border-radius: 10px; /* bordes redondos */
+  padding: 20px; /* espaciado interno */
+  background-color: #b1afaf; /* fondo del recuadro */
+  margin-bottom: 20px; /* espacio debajo del recuadro */
 }
 
 .info-item {
-  margin-bottom: 10px; /* Espacio entre los elementos de información */
+  margin-bottom: 10px; /* espacio entre los elementos de información */
 }
 
 .edit-button {
