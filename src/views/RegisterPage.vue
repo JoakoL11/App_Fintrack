@@ -6,7 +6,8 @@
           <h1>Crear una Cuenta</h1>
         </div>
         <div class="form-box">
-          <!-- Campo Nombre -->
+
+          <!-- campo Nombre -->
           <ion-item class="custom-item" :class="{ 'error-item': nameError, 'success-item': nameValid }">
             <ion-input
               v-model="name"
@@ -20,7 +21,7 @@
           <p v-if="nameError" class="error-message">{{ nameError }}</p>
           <p v-if="nameValid" class="success-message">Nombre válido</p>
 
-          <!-- Campo Email -->
+          <!-- campo email -->
           <ion-item class="custom-item" :class="{ 'error-item': emailError, 'success-item': emailValid }">
             <ion-input
               v-model="email"
@@ -34,7 +35,7 @@
           <p v-if="emailError" class="error-message">{{ emailError }}</p>
           <p v-if="emailValid" class="success-message">Email válido</p>
 
-          <!-- Campo Teléfono -->
+          <!-- campo telefono -->
           <ion-item class="custom-item" :class="{ 'error-item': phoneError, 'success-item': phoneValid }">
             <ion-input
               v-model="phone"
@@ -48,7 +49,7 @@
           <p v-if="phoneError" class="error-message">{{ phoneError }}</p>
           <p v-if="phoneValid" class="success-message">Teléfono válido</p>
 
-          <!-- Campo Contraseña -->
+          <!-- campo contraseña -->
           <ion-item class="custom-item" :class="{ 'error-item': passwordError, 'success-item': passwordValid }">
             <ion-input
               v-model="password"
@@ -64,12 +65,12 @@
           <p v-if="passwordError" class="error-message">{{ passwordError }}</p>
           <p v-if="passwordValid" class="success-message">Contraseña válida</p>
 
-          <!-- Botón Registrar -->
+          <!-- boton registrar -->
           <ion-button type="submit" shape="round" expand="block" @click="register" class="register-button">
             Registrar
           </ion-button>
 
-          <!-- Botón Volver al Login -->
+          <!-- boton volver al login -->
           <ion-button shape="round" expand="block" fill="outline" @click="goToLogin" class="login-button">
             Volver al Login
           </ion-button>
@@ -84,7 +85,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IonContent, IonButton, IonInput, IonItem, IonInputPasswordToggle, IonPage, alertController } from '@ionic/vue';
 
-// Recuperar los usuarios de localStorage o iniciar un arreglo vacío si no hay datos
+// recuperar los usuarios de localstorage o iniciar un arreglo vacio si no hay datos
 const users = JSON.parse(localStorage.getItem('users')) || [];
 
 export const registerUser = (name, email, phone, password) => {
@@ -96,7 +97,7 @@ export const registerUser = (name, email, phone, password) => {
   const newUser = { name, email, phone, password };
   users.push(newUser);
 
-  // Guardar los usuarios actualizados en localStorage
+  // guardar los usuarios actualizados en localstorage
   localStorage.setItem('users', JSON.stringify(users));
 
   return { success: true };
@@ -118,7 +119,7 @@ export default {
     const phone = ref('');
     const password = ref('');
 
-    // Errores y validaciones
+    // errores y validaciones
     const nameError = ref('');
     const emailError = ref('');
     const phoneError = ref('');
@@ -138,7 +139,7 @@ export default {
       await alert.present();
     };
 
-    // Validación de campos individuales cuando el usuario pierde el foco
+    // validacion de campos individuales cuando el usuario pierde el foco
     const validateName = () => {
       if (!name.value) {
         nameError.value = "Por favor, ingresa tu nombre.";
@@ -154,7 +155,7 @@ export default {
         emailError.value = "Por favor, ingresa tu correo electrónico.";
         emailValid.value = false;
       } else {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 'con esto se valida bien el email, no se si agregar mas' nc
         if (!emailPattern.test(email.value)) {
           emailError.value = "Por favor, ingresa un correo electrónico válido.";
           emailValid.value = false;
@@ -170,7 +171,7 @@ export default {
         phoneError.value = "Por favor, ingresa tu número de teléfono.";
         phoneValid.value = false;
       } else {
-        const phonePattern = /^[0-9]{9,15}$/;
+        const phonePattern = /^[0-9]{9,15}$/; // formato telefono 
         if (!phonePattern.test(phone.value)) {
           phoneError.value = "Por favor, ingresa un número de teléfono válido (9 a 15 dígitos).";
           phoneValid.value = false;
@@ -191,16 +192,16 @@ export default {
       }
     };
 
-    // Registro de usuario cuando se completan todas las validaciones
+    // registro de usuario cuando se completan todas las validaciones
     const register = async () => {
       validateName();
       validateEmail();
       validatePhone();
       validatePassword();
 
-      // Verificar si hay errores
+      // verificar si hay errores
       if (!nameValid.value || !emailValid.value || !phoneValid.value || !passwordValid.value) {
-        return; // Si hay errores, no continuar
+        return; // si hay errores no se puede continuar
       }
 
       const result = registerUser(name.value, email.value, phone.value, password.value);
@@ -213,7 +214,7 @@ export default {
     };
 
     const goToLogin = () => {
-      router.push('/login'); // Cambia a la página de login
+      router.push('/login'); // cambia a la pagina de login
     };
 
     return { 
@@ -238,68 +239,68 @@ export default {
 }
 
 .title-box {
-  border: 2px solid #ffffff; /* Color del borde */
-  border-radius: 15px; /* Bordes redondeados */
-  padding: 10px; /* Espaciado interno */
-  margin-bottom: 20px; /* Espacio debajo del título */
-  text-align: center; /* Centrar el texto */
-  background-color: rgba(255, 255, 255, 0.897); /* Fondo semi-transparente */
+  border: 2px solid #ffffff;
+  border-radius: 15px; 
+  padding: 10px; 
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.897); 
 }
 
 h1 {
-  color: #333333; /* Color del texto del título */
+  color: #333333;
   font-size: 24px;
   font-weight: bold;
 }
 
 .form-box {
-  border: 2px solid black; /* Borde del recuadro */
-  border-radius: 20px; /* Bordes redondeados */
-  padding: 20px; /* Espaciado interno */
-  background-color: #262323fb; /* Fondo del recuadro */
+  border: 2px solid black; 
+  border-radius: 20px;
+  padding: 20px;
+  background-color: #262323fb;
 }
 
 .custom-item {
   margin-bottom: 15px; /* espacio entre campos */
-  --min-height: 50px; /* reduce el tamaño del input */
+  --min-height: 50px; /* tamaño del input en 50px para que no sea tan enorme */
   --border-radius: 20px; /* bordes redondeados */
-  --background: rgba(255, 255, 255, 0.984); /* Fondo blanco para los inputs */
+  --background: rgba(255, 255, 255, 0.984); /* fondo inputs en color blanco */
   --padding-start: 12px;
   --padding-end: 12px;
 }
 
 .error-item {
-  border: 5px solid red; /* Bordes rojos para campos inválidos */
-  border-radius: 25px; /* Bordes redondeados */
+  border: 5px solid red; /* bordes rojos para campos invalidos */
+  border-radius: 25px; /* bordes redondos */
 }
 
 .success-item {
-  border: 5px solid green; /* Bordes verdes para campos válidos */
-  border-radius: 25px; /* Bordes redondeados */
+  border: 5px solid green; /* bordes verdes para campos validos */
+  border-radius: 25px; /* bordes redondos */
 }
 
 .error-message {
-  color: red; /* Color del texto del mensaje de error */
-  font-size: 12px; /* Tamaño del texto */
-  margin-top: 5px; /* Espaciado superior */
+  color: red; /* color del mensaje de error */
+  font-size: 12px; /* tamaño del texto */
+  margin-top: 5px; /* espaciado superior */
 }
 
 .success-message {
-  color: green; /* Color del texto del mensaje de éxito */
-  font-size: 12px; /* Tamaño del texto */
-  margin-top: 5px; /* Espaciado superior */
+  color: green; /* volor del texto del mensaje de exito */
+  font-size: 12px; /* tamaño del texto */
+  margin-top: 5px; /* espaciado superior */
 }
 
 .register-button {
-  color: white; /* color del texto del botón */
+  color: white; /* color del texto del boton */
   margin-bottom: 10px;
 }
 
 .login-button {
-  color: #3880ff; /* color del texto del botón de volver al login */
+  color: #3880ff; /* color del texto del boton de volver al login */
 }
 
-/* Responsividad */
+/*                                      responsividad */
 @media (min-width: 800px) {
   .form-box {
     max-width: 400px;
