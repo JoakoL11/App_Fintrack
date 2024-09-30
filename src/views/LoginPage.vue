@@ -61,13 +61,13 @@ export default {
     const email = ref('');
     const password = ref('');
 
-    // Errores y validaciones
+    // errores y validaciones
     const emailError = ref('');
     const passwordError = ref('');
     const emailValid = ref(false);
     const passwordValid = ref(false);
 
-    // Función para mostrar una alerta
+    // funcion para mostrar una alerta
     const showAlert = async (message) => {
       const alert = await alertController.create({
         header: 'Alerta',
@@ -77,15 +77,15 @@ export default {
       await alert.present();
     };
 
-    // Lógica de inicio de sesión
+    // logica de inicio de sesion
     const login = async () => {
-      // Reiniciar errores y validaciones
+      // reiniciar errores y validaciones
       emailError.value = '';
       passwordError.value = '';
       emailValid.value = false;
       passwordValid.value = false;
 
-      // Validaciones
+      // validaciones
       if (!email.value) {
         emailError.value = 'Por favor, ingresa tu correo electrónico.';
       } else {
@@ -104,18 +104,18 @@ export default {
       }
 
       if (emailError.value || passwordError.value) {
-        return; // Si hay errores, no continuar
+        return; // si hay errores no se puede continuar
       }
 
-      // Recuperar los usuarios de localStorage
+      // recuperar los usuarios de localStorage
       const users = JSON.parse(localStorage.getItem('users')) || [];
 
-      // Buscar el usuario por email y contraseña
+      // buscar el usuario por email y contraseña
       const user = users.find(user => user.email === email.value && user.password === password.value);
 
       if (user) {
         await showAlert('Inicio de sesión exitoso!');
-        // Aquí puedes redirigir al usuario a la página principal o de dashboard
+        // aquí se redirige al usuario a la pagina principal o de dashboard
         router.push('/home');
       } else {
         await showAlert('Correo o contraseña incorrectos.');
@@ -136,41 +136,41 @@ export default {
   max-width: 400px;
   margin: auto;
   padding: 20px;
-  background-image: #ffffff; /* fondo para el formulario */
+  background-image: #ffffff; /* fondo formulario */
 }
 
 .title-box {
-  border: 2px solid #ffffff; /* Color del borde */
-  border-radius: 15px; /* Bordes redondeados */
-  padding: 10px; /* Espaciado interno */
-  margin-bottom: 20px; /* Espacio debajo del título */
-  text-align: center; /* Centrar el texto */
-  background-color: rgba(141, 141, 141, 0.897); /* Fondo semi-transparente */
+  border: 2px solid #ffffff;
+  border-radius: 15px;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: rgba(141, 141, 141, 0.897);
 }
 
-h1 {
-  color: #000000; /* Color del texto del título */
+h1 {/*no olvidar que esto es el titulo xd */
+  color: #000000;
   font-size: 24px;
   font-weight: bold;
 }
 
 .form-box {
-  border: 2px solid black; /* Borde del recuadro */
-  border-radius: 20px; /* Bordes redondeados */
-  padding: 20px; /* Espaciado interno */
-  background-color: #262323fb; /* Fondo del recuadro */
+  border: 2px solid black; /* borde recuadro */
+  border-radius: 20px; /* bordes redondos */
+  padding: 20px; /* espaciado */
+  background-color: #262323fb; /* fondo recuadro */
 }
 
 .custom-item {
-  margin-bottom: 15px; /* espacio entre campos */
-  --min-height: 50px; /* reduce el tamaño del input */
-  --border-radius: 20px; /* bordes redondeados */
-  --background: rgba(223, 222, 222, 0.984); /* Fondo blanco para los inputs */
+  margin-bottom: 15px;
+  --min-height: 50px;
+  --border-radius: 20px;
+  --background: rgba(223, 222, 222, 0.984); /* fondo para los inputs lo dejamos color blanco */
   --padding-start: 12px;
   --padding-end: 12px;
 }
 
-/* Botones personalizados */
+/* botones personalizados */
 .login-button {
   margin-top: 20px;
   --color: white;
@@ -186,12 +186,12 @@ h1 {
 }
 
 .error-message {
-  color: red; /* Color del texto del mensaje de error */
-  font-size: 12px; /* Tamaño del texto */
-  margin-top: 5px; /* Espaciado superior */
+  color: red; /* color del mensaje de error */
+  font-size: 12px; /* tamaño texto */
+  margin-top: 5px; /* espaciado superior */
 }
 
-/* Responsividad */
+/*                                                         responsividad                     */
 @media (min-width: 800px) {
   .form-box {
     max-width: 400px;
