@@ -62,3 +62,31 @@ const router = createRouter({
 });
 
 export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// me tiene chato ver sangria en todo aqui xd
+// 'pd "todo" me sale con sangria 'dr
