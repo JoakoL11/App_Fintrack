@@ -62,15 +62,9 @@ import { IonContent, IonButton, IonLabel, IonItem, IonList, IonCard } from '@ion
 
 const router = useRouter();
 
-<<<<<<< HEAD
-const totalBalance = ref(500000);//   cambiar esto por el valor real  IMPORTANTE
-const totalExpenses = ref(20000);//   cambiar esto por el valor real  IMPORTANTE
-const totalIncome = ref(100000); //   cambiar esto por el valor real  IMPORTANTE
-=======
 const totalBalance = ref(500000); // Cambiar esto por el valor real
 const totalExpenses = ref(20000); // Cambiar esto por el valor real
 const totalIncome = ref(100000); // Cambiar esto por el valor real
->>>>>>> b23c9402699e3ff6e43fadfd72819c456c94919f
 
 const recentTransactions = ref([
   { id: 1, description: 'Compra de comida', amount: -5000, date: '2024-09-20' },
