@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content>
-      <!-- Filtrar por tipo -->
+      <!-- filtrar por tipo -->
       <ion-item>
         <ion-label>Filtrar por tipo</ion-label>
         <ion-select v-model="filterType" @ionChange="filterTransactions">
@@ -18,7 +18,7 @@
         </ion-select>
       </ion-item>
 
-      <!-- Formulario para agregar nueva transacción -->
+      <!-- formulario para agregar nueva transacción -->
       <ion-item>
         <ion-label position="stacked">Nombre de Transacción</ion-label>
         <ion-input v-model="newTransaction.concept" placeholder="Nombre de la Transacción" @input="validateField('concept')"></ion-input>
@@ -43,7 +43,7 @@
 
       <ion-button expand="full" @click="addTransaction">Agregar Transacción</ion-button>
 
-      <!-- Listado de transacciones -->
+      <!-- lista de transacciones -->
       <ion-list v-if="filteredTransactions.length > 0">
         <ion-item v-for="(transaction, index) in filteredTransactions" :key="index">
           <ion-card>
@@ -54,14 +54,15 @@
             <ion-card-content>
               <p><strong>Monto:</strong> {{ formatCurrency(transaction.amount) }}</p>
               <p><strong>Tipo:</strong> {{ transaction.type }}</p>
-              <!-- Botón para eliminar transacción -->
+
+              <!-- boton para eliminar transaccion -->
               <ion-button color="danger" expand="block" @click="deleteTransaction(index)">Eliminar</ion-button>
             </ion-card-content>
           </ion-card>
         </ion-item>
       </ion-list>
 
-      <!-- Mensaje cuando no hay transacciones -->
+      <!-- mensaje cuando no hay transacciones -->
       <ion-item v-else>
         <ion-label>No hay transacciones registradas.</ion-label>
       </ion-item>
@@ -92,11 +93,11 @@ import {
   IonCardContent
 } from '@ionic/vue';
 
-// Filtro de tipo de transacción
+// filtro de tipo de transaccion
 const filterType = ref('Todos');
 const filteredTransactions = ref(state.transactions);
 
-// Nueva transacción a agregar
+// nueva transaccion a agregar
 const newTransaction = ref({
   concept: '',
   amount: 0,
@@ -104,61 +105,61 @@ const newTransaction = ref({
   date: new Date()
 });
 
-// Errores de validación
+// errores de validacion
 const errors = ref({
   concept: false,
   amount: false,
   type: false
 });
 
-// Función para agregar nueva transacción
+// funcion para agregar nueva transaccion
 const addTransaction = () => {
-  // Limpiar errores previos
+  // limpiar errores previos
   errors.value.concept = false;
   errors.value.amount = false;
   errors.value.type = false;
 
-  // Validar campos
+  // validar campos
   if (!newTransaction.value.concept) {
     errors.value.concept = true;
-    hideErrorAfterTimeout('concept'); // Ocultar el mensaje después de 5 segundos
+    hideErrorAfterTimeout('concept'); // ocultar el mensaje despues de 5 segundos 'lo cambiaria a 3 seg'dr
   }
   if (!newTransaction.value.amount || newTransaction.value.amount <= 0) {
     errors.value.amount = true;
-    hideErrorAfterTimeout('amount'); // Ocultar el mensaje después de 5 segundos
+    hideErrorAfterTimeout('amount'); // ocultar el mensaje despues de 5 segundos
   }
   if (!newTransaction.value.type) {
     errors.value.type = true;
-    hideErrorAfterTimeout('type'); // Ocultar el mensaje después de 5 segundos
+    hideErrorAfterTimeout('type'); // ocultar el mensaje despues de 5 segundos
   }
 
-  // Si hay algún error, no continuar
+  // si hay algún error no se puede continuar 'ahora que lo veo, lo repetimos harto esto xd'dr
   if (errors.value.concept || errors.value.amount || errors.value.type) {
     return;
   }
 
-  // Agregar la nueva transacción a la lista global
+  // sgregar la nueva transaccion a la lista
   state.transactions.push({
     ...newTransaction.value,
-    date: new Date() // Con esta función se añade la fecha actual
+    date: new Date() // con esta funcion se añade la fecha actual
   });
 
-  // Limpiar el formulario
+  // limpiar el formulario
   newTransaction.value.concept = '';
   newTransaction.value.amount = 0;
   newTransaction.value.type = '';
 
-  // Actualizar el filtro
+  // actualizar el filtro
   filterTransactions();
 };
 
-// Función para eliminar una transacción
+// funcion para eliminar una transaccion
 const deleteTransaction = (index: number) => {
-  state.transactions.splice(index, 1); // Eliminar de la lista global
-  filterTransactions(); // Actualizar el filtro después de eliminar
+  state.transactions.splice(index, 1); // eliminar de la lista 
+  filterTransactions(); // actualizar el filtro despues de eliminar
 };
 
-// Función para filtrar las transacciones
+// funcion para filtrar las transacciones
 const filterTransactions = () => {
   if (filterType.value === 'Todos') {
     filteredTransactions.value = state.transactions;
@@ -167,12 +168,12 @@ const filterTransactions = () => {
   }
 };
 
-// Función para formatear la moneda
+// funcion para formatear la moneda
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
 };
 
-// Función para validar campos en tiempo real
+// funcion para validar campos en tiempo real
 const validateField = (field: string) => {
   if (field === 'concept' && newTransaction.value.concept) {
     errors.value.concept = false;
@@ -185,10 +186,10 @@ const validateField = (field: string) => {
   }
 };
 
-// Función para ocultar errores después de 5 segundos
+// funcion para ocultar errores después de 5 segundos
 const hideErrorAfterTimeout = (field: string) => {
   setTimeout(() => {
-    errors.value[field] = false;
+    errors.value[field] = false; // 'a mi me sale con sangria y a ustedes??'dr
   }, 5000);
 };
 </script>
