@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content>
-      <!-- Formulario para agregar presupuesto -->
+      <!-- formulario para agregar presupuesto -->
       <ion-item>
         <ion-label position="stacked">Descripción del Presupuesto</ion-label>
         <ion-input
@@ -31,7 +31,7 @@
 
       <ion-button expand="full" @click="addBudget">Agregar Presupuesto</ion-button>
 
-      <!-- Lista de presupuestos -->
+      <!-- lista de presupuestos -->
       <ion-list v-if="budgets.length > 0">
         <ion-item v-for="(budget, index) in budgets" :key="index">
           <ion-card>
@@ -47,7 +47,7 @@
         </ion-item>
       </ion-list>
 
-      <!-- Mensaje cuando no existe presupuesto -->
+      <!-- mensaje cuando no existe presupuesto -->
       <ion-item v-else>
         <ion-label>No hay presupuestos registrados.</ion-label>
       </ion-item>
@@ -59,7 +59,6 @@
 import { ref } from 'vue';
 import { state } from '../state'; 
 
-// Importa todos los componentes de Ionic que utilizas
 import {
   IonPage,
   IonHeader,
@@ -78,29 +77,33 @@ import {
   IonCardContent
 } from '@ionic/vue';
 
-// Lista de presupuestos desde el estado global
+// 'no pude hacerlo xd sadjklasd me estrese, que alguien lo haga porfa, no pude :c kasldjasid' dr
+
+// 'ya lo hice mano igual revisa si' nc
+
+// lista de presupuestos
 const budgets = ref(state.budgets || []);
 
-// Nuevo presupuesto a agregar
+// nuevo presupuesto a agregar
 const newBudget = ref({
   description: '',
   amount: 0,
   date: new Date()
 });
 
-// Errores de validación
+// errores de validación
 const errors = ref({
   description: false,
   amount: false
 });
 
-// Función para agregar presupuesto
+// funcion para agregar presupuesto
 const addBudget = () => {
-  // Limpiar errores previos
+  // limpiar errores previos
   errors.value.description = false;
   errors.value.amount = false;
 
-  // Validar campos
+  // validar campos
   if (!newBudget.value.description.trim()) {
     errors.value.description = true;
   }
@@ -108,18 +111,18 @@ const addBudget = () => {
     errors.value.amount = true;
   }
 
-  // Si hay errores, no continuar
+  // si hay errores no se puede continuar
   if (errors.value.description || errors.value.amount) {
     return;
   }
 
-  // Agregar el nuevo presupuesto a la lista global de presupuestos
+  // agregar el nuevo presupuesto a la lista 
   budgets.value.push({
     ...newBudget.value,
-    date: new Date() // Añadir la fecha actual
+    date: new Date() // con esto se pone la fecha de hoy
   });
 
-  // Limpiar el formulario
+  // limpiar el formulario
   newBudget.value = {
     description: '',
     amount: 0,
@@ -127,17 +130,17 @@ const addBudget = () => {
   };
 };
 
-// Función para eliminar presupuesto
+// funciom para eliminar presupuesto
 const deleteBudget = (index) => {
   budgets.value.splice(index, 1);
 };
 
-// Función para formatear la moneda
+// funcion para formato de moneda
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
 };
 
-// Función para validar campos en tiempo real
+// funcion para validar campos en tiempo real
 const validateField = (field) => {
   if (field === 'description' && newBudget.value.description.trim()) {
     errors.value.description = false;
