@@ -98,30 +98,30 @@ function setMenuOpen(open: boolean) {
     --padding-start: 0;
   }
 
-  /* Estilo para cuando el menú está abierto */
+  /* estilo para cuando el menu esta abierto */
   .menu-open {
-    background-color: rgba(48, 2, 2, 0.205); /* Color de fondo de la página cuando el menú está abierto */
-    transition: background-color 0.3s ease; /* Transición suave */
+    background-color: rgba(48, 2, 2, 0.205); /* color fondo pagina cuando el menu esta abierto */
+    backdrop-filter: blur(15px); /* intente de hacer que el fondo se desenfoque, si no funciona del todo bien borrar backdrop-filter de abajito*/
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;/* aqui el backdrop-filter y cerrar en "ease;"*/
   }
 
-  /* Estilo del menú */
+  /* estilo del menu */
   ion-menu {
-    --background: #d60e0e; /* Fondo del menú */
-    --color: #070bff; /* Color del texto del menú */
+    --background: #d60e0e; /* fondo menu */
+    --color: #070bff; /* color texto del menu */
   }
 
-  /* Opcional: estilo adicional para el contenido del menú */
   ion-menu .ion-content {
-    --padding-start: 16px; /* Espaciado a la izquierda del contenido del menú */
+    --padding-start: 16px;
   }
 
-  /* Estilo, letra y fondo de lista */
+  /* estilo, letra y fondo de lista */
   ion-menu ion-item {
-    --background: #ffffff; /* Fondo de los ítems del menú */
-    --color: #093a36; /* Color del texto de los ítems del menú */
+    --background: #ffffff; /* fondo de los items del menu */
+    --color: #093a36; /* color del texto de los items del menu */
   }
 
   ion-menu ion-item:hover {
-    --background: #20a3b48f; /* Fondo de los ítems del menú al pasar el ratón */
+    --background: #20a3b48f; /* fondo ítems del menu al pasar el mouse */
   }
 </style>
