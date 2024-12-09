@@ -2,165 +2,202 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Presupuesto</ion-title>
+        <ion-title>Presupuestos</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
-      <!-- formulario para agregar presupuesto -->
-      <ion-item>
-        <ion-label position="stacked">Descripción del Presupuesto</ion-label>
-        <ion-input
-          v-model="newBudget.description"
-          placeholder="Descripción del presupuesto"
-          @ionInput="validateField('description')"
-        ></ion-input>
-      </ion-item>
-      <p v-if="errors.description" class="error-message">Por favor ingresa una descripción válida.</p>
+    <ion-content class="ion-padding">
+      <!-- Botón para agregar presupuesto -->
+      <div class="button-container-center">
+        <ion-button class="expand-block" @click="showAddBudgetModal">AGREGAR PRESUPUESTO</ion-button>
+      </div>
 
-      <ion-item>
-        <ion-label position="stacked">Monto</ion-label>
-        <ion-input
-          v-model.number="newBudget.amount"
-          type="number"
-          placeholder="Monto del presupuesto"
-          @ionInput="validateField('amount')"
-        ></ion-input>
-      </ion-item>
-      <p v-if="errors.amount" class="error-message">El monto debe ser mayor a 0.</p>
-
-      <ion-button expand="full" @click="addBudget">Agregar Presupuesto</ion-button>
-
-      <!-- lista de presupuestos -->
+      <!-- Lista de presupuestos -->
       <ion-list v-if="budgets.length > 0">
-        <ion-item v-for="(budget, index) in budgets" :key="index">
+        <ion-item v-for="(budget, index) in budgets" :key="budget.id">
           <ion-card>
-            <ion-card-header>
-              <ion-card-title>{{ budget.description }}</ion-card-title>
-              <ion-card-subtitle>{{ new Date(budget.date).toLocaleString() }}</ion-card-subtitle>
-            </ion-card-header>
             <ion-card-content>
-              <p><strong>Monto:</strong> {{ formatCurrency(budget.amount) }}</p>
-              <ion-button color="danger" expand="block" @click="deleteBudget(index)">Eliminar</ion-button>
+              <p><strong>Categoría:</strong> {{ budget.category }}</p>
+              <p><strong>Límite:</strong> {{ formatCurrency(budget.limit) }}</p>
+              <p><strong>Gastado:</strong> {{ formatCurrency(budget.spent) }}</p>
+              <div class="button-container">
+                <ion-button color="primary" fill="outline" @click="prepareEditBudget(index)">
+                  EDITAR
+                </ion-button>
+                <ion-button color="danger" @click="deleteBudget(budget.id)">
+                  ELIMINAR
+                </ion-button>
+              </div>
             </ion-card-content>
           </ion-card>
         </ion-item>
       </ion-list>
 
-      <!-- mensaje cuando no existe presupuesto -->
-      <ion-item v-else>
-        <ion-label>No hay presupuestos registrados.</ion-label>
-      </ion-item>
+      <!-- Modal para editar presupuesto -->
+      <ion-modal :is-open="isEditModalOpen">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Editar Presupuesto</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="closeEditModal">CERRAR</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Categoría</ion-label>
+            <ion-input v-model="editingBudget.category" placeholder="Categoría del presupuesto"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Límite</ion-label>
+            <ion-input v-model.number="editingBudget.limit" type="number" placeholder="Límite del presupuesto"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Gastado</ion-label>
+            <ion-input v-model.number="editingBudget.spent" type="number" placeholder="Cantidad gastada"></ion-input>
+          </ion-item>
+          <ion-button expand="block" @click="saveEditedBudget">GUARDAR CAMBIOS</ion-button>
+        </ion-content>
+      </ion-modal>
+
+      <!-- Modal para agregar nuevo presupuesto -->
+      <ion-modal :is-open="isAddModalOpen">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Agregar Nuevo Presupuesto</ion-title>
+            <ion-buttons slot="end">
+              <ion-button @click="closeAddModal">CERRAR</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Categoría</ion-label>
+            <ion-input
+              v-model="newBudget.category"
+              placeholder="Categoría del presupuesto"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Límite</ion-label>
+            <ion-input
+              v-model.number="newBudget.limit"
+              type="number"
+              placeholder="Límite del presupuesto"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Gastado</ion-label>
+            <ion-input
+              v-model.number="newBudget.spent"
+              type="number"
+              placeholder="Cantidad gastada"
+            ></ion-input>
+          </ion-item>
+          <ion-button expand="block" @click="addBudget">AGREGAR PRESUPUESTO</ion-button>
+        </ion-content>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { state } from '../state'; 
-
+import { ref, onMounted } from "vue";
 import {
   IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonButton,
   IonList,
+  IonItem,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent
-} from '@ionic/vue';
+  IonCardContent,
+  IonButton,
+  IonModal,
+  IonLabel,
+  IonInput
+} from "@ionic/vue"; // Importación de componentes de Ionic
+import { useBudgetStore } from "@/store/Budget.js";
 
-// 'no pude hacerlo xd sadjklasd me estrese, que alguien lo haga porfa, no pude :c kasldjasid' dr
+const budgetStore = useBudgetStore();
+const budgets = budgetStore.budgets;
 
-// 'ya lo hice mano igual revisa si' nc
-
-// lista de presupuestos
-const budgets = ref(state.budgets || []);
-
-// nuevo presupuesto a agregar
+// Estado para los modales y datos
+const isEditModalOpen = ref(false);
+const isAddModalOpen = ref(false);
+const editingBudget = ref({
+  id: "",
+  category: "",
+  limit: 0,
+  spent: 0
+});
 const newBudget = ref({
-  description: '',
-  amount: 0,
-  date: new Date()
+  category: "",
+  limit: 0,
+  spent: 0
 });
 
-// errores de validación
-const errors = ref({
-  description: false,
-  amount: false
+// Al montar el componente, activar el listener en tiempo real
+onMounted(() => {
+  budgetStore.fetchBudgets();
+  isEditModalOpen.value = false; // Asegurar que el modal de edición esté cerrado
+  isAddModalOpen.value = false; // Asegurar que el modal de agregar esté cerrado
 });
 
-// funcion para agregar presupuesto
+// Función para abrir el modal de agregar presupuesto
+const showAddBudgetModal = () => {
+  isAddModalOpen.value = true;
+};
+
+// Función para cerrar el modal de agregar presupuesto
+const closeAddModal = () => {
+  isAddModalOpen.value = false;
+  newBudget.value = { category: "", limit: 0, spent: 0 };
+};
+
+// Función para agregar un presupuesto
 const addBudget = () => {
-  // limpiar errores previos
-  errors.value.description = false;
-  errors.value.amount = false;
-
-  // validar campos
-  if (!newBudget.value.description.trim()) {
-    errors.value.description = true;
-  }
-  if (newBudget.value.amount <= 0 || isNaN(newBudget.value.amount)) {
-    errors.value.amount = true;
-  }
-
-  // si hay errores no se puede continuar
-  if (errors.value.description || errors.value.amount) {
+  if (!newBudget.value.category.trim() || newBudget.value.limit <= 0 || newBudget.value.spent < 0) {
+    alert("Por favor completa todos los campos correctamente.");
     return;
   }
 
-  // agregar el nuevo presupuesto a la lista 
-  budgets.value.push({
-    ...newBudget.value,
-    date: new Date() // con esto se pone la fecha de hoy
-  });
-
-  // limpiar el formulario
-  newBudget.value = {
-    description: '',
-    amount: 0,
-    date: new Date()
-  };
+  // Enviar el presupuesto directamente al store
+  budgetStore.addBudget({ ...newBudget.value });
+  closeAddModal();
 };
 
-// funciom para eliminar presupuesto
-const deleteBudget = (index) => {
-  budgets.value.splice(index, 1);
+// Función para preparar datos para editar presupuesto
+const prepareEditBudget = (index) => {
+  editingBudget.value = { ...budgets[index] };
+  isEditModalOpen.value = true;
 };
 
-// funcion para formato de moneda
+// Función para guardar cambios al editar un presupuesto
+const saveEditedBudget = () => {
+  const { id, ...updatedBudget } = editingBudget.value;
+  if (!id) {
+    alert("Error: ID no encontrado.");
+    return;
+  }
+  budgetStore.updateBudget(id, updatedBudget);
+  closeEditModal();
+};
+
+// Función para cerrar el modal de edición
+const closeEditModal = () => {
+  isEditModalOpen.value = false;
+};
+
+// Función para eliminar un presupuesto
+const deleteBudget = (id) => {
+  budgetStore.deleteBudget(id);
+};
+
+// Función para formatear números como moneda
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(value);
-};
-
-// funcion para validar campos en tiempo real
-const validateField = (field) => {
-  if (field === 'description' && newBudget.value.description.trim()) {
-    errors.value.description = false;
-  }
-  if (field === 'amount' && newBudget.value.amount > 0 && !isNaN(newBudget.value.amount)) {
-    errors.value.amount = false;
-  }
+  if (!value) return "$0.00";
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "USD" }).format(value);
 };
 </script>
-
-
-
-
-<style scoped>
-ion-card {
-  margin-bottom: 15px;
-}
-.error-message {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-}
-</style>

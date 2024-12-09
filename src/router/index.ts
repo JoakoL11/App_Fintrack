@@ -8,85 +8,64 @@ import TransactionsPage from '@/views/TransactionsPage.vue';
 import InvestmentPage from '@/views/InvestmentPage.vue';
 import RegisterPage from '@/views/RegisterPage.vue';
 import ProfilePage from '@/views/ProfilePage.vue';
+import AboutPage from '@/views/AboutPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: HomePage
+    redirect: '/login', // Redirigir a la página de inicio de sesión
   },
   {
     path: '/login',
     name: 'Login',
-    component: LoginPage
+    component: LoginPage,
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: HomePage,
+  },
+
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterPage,
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('@/views/AboutPage.vue'),
   },
   {
     path: '/budget',
     name: 'Budget',
-    component: BudgetPage
+    component: BudgetPage,
   },
   {
     path: '/transactions',
     name: 'Transactions',
-    component: TransactionsPage
+    component: TransactionsPage,
   },
   {
     path: '/investment',
     name: 'Investment',
-    component: InvestmentPage
+    component: InvestmentPage,
   },
   {
     path: '/reports',
     name: 'Reports',
-    component: ReportsPage
+    component: ReportsPage,
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: RegisterPage
-  },
-  {
-    path: '/profile', 
+    path: '/profile',
     name: 'Profile',
-    component: ProfilePage 
-  }
+    component: ProfilePage,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 });
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// me tiene chato ver sangria en todo aqui xd
-// 'pd "todo" me sale con sangria 'dr

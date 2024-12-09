@@ -1,93 +1,99 @@
 <template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button default-href="/home"></ion-back-button>
-      </ion-buttons>
-      <ion-title>Perfil de Usuario</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">
-    <div class="profile-container">
-      <div class="title-box">
-        <h1>Detalles del Usuario</h1>
+  <ion-page class="profile-page">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Mi Perfil</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content class="ion-padding">
+      <div class="profile-container">
+        <div class="profile-header">
+          <ion-avatar>
+            <img :src="userAvatar" alt="Avatar del usuario" />
+          </ion-avatar>
+          <h2>{{ userName }}</h2>
+          <p>{{ userEmail }}</p>
+        </div>
+        
+        <ion-list lines="none" class="profile-options">
+          <ion-item button @click="editProfile">
+            <ion-icon :icon="personOutline" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Editar perfil</h3>
+              <p>Actualiza tu información personal</p>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item button @click="changePassword">
+            <ion-icon :icon="lockClosedOutline" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Cambiar contraseña</h3>
+              <p>Actualiza tu contraseña</p>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item button @click="configureNotifications">
+            <ion-icon :icon="notificationsOutline" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Notificaciones</h3>
+              <p>Configura tus preferencias de notificación</p>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item button @click="managePrivacy">
+            <ion-icon :icon="shieldOutline" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Privacidad y seguridad</h3>
+              <p>Gestiona la seguridad de tu cuenta</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        
+        <ion-button expand="block" color="danger" class="logout-button" @click="handleLogout">
+          Cerrar sesión
+        </ion-button>
       </div>
-      <div class="info-box">
-        <div class="info-item">
-          <strong>Nombre de Usuario:</strong>
-          <span>{{ username }}</span>
-        </div>
-        <div class="info-item">
-          <strong>Email:</strong>
-          <span>{{ email }}</span>
-        </div>
-        <div class="info-item">
-          <strong>Teléfono:</strong>
-          <span>{{ telefono }}</span>
-        </div>
-      </div>
-      <ion-button expand="block" @click="toggleEdit" class="edit-button">
-        {{ isEditing ? 'Guardar Cambios' : 'Editar Perfil' }}
-      </ion-button>
-    </div>
-  </ion-content>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonAvatar, IonList, IonItem, IonLabel, IonIcon, IonButton } from '@ionic/vue';
+import { personOutline, lockClosedOutline, notificationsOutline, shieldOutline } from 'ionicons/icons';
 
-const username = ref('Usuario Ejemplo');
-const email = ref('usuario@ejemplo.com');
-const telefono = ref('123-456-7890');  // Cambie el tipo a string para telefonos 'buena'dr
+const router = useRouter();
 
-const isEditing = ref(false);
+const userName = ref('Juan Pérez');
+const userEmail = ref('juan.perez@example.com');
+const userAvatar = ref('https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y');
 
-function toggleEdit() {
-  if (isEditing.value) {
-    // logica para guardar cambios (actualizar datos en la base de datos o estado) ************************
-    alert('Cambios guardados: ' + 
-          `Usuario: ${username.value}, Email: ${email.value}, Teléfono: ${telefono.value}`);
-  }
-  isEditing.value = !isEditing.value; // vambiar estado de edicion   'como es esto?? 'dr
-}
+const editProfile = () => {
+  console.log('Editar perfil');
+};
+
+const changePassword = () => {
+  console.log('Cambiar contraseña');
+};
+
+const configureNotifications = () => {
+  console.log('Configurar notificaciones');
+};
+
+const managePrivacy = () => {
+  console.log('Gestionar privacidad y seguridad');
+};
+
+const handleLogout = () => {
+  console.log('Cerrando sesión');
+  // Aquí puedes agregar lógica para limpiar el estado de la sesión, tokens, etc.
+  // Por ejemplo:
+  // localStorage.removeItem('authToken');
+  
+  // Redirigir al usuario a la página de inicio de sesión
+  router.push('/login');
+};
 </script>
 
-<style scoped>
-.profile-container {
-  max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  background-color: #ffffff; /* fondo para el perfil */
-  border-radius: 10px; /* bordes redondos */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* sombra para efecto de profundidad 7u7 */
-}
-
-.title-box {
-  text-align: center; /* centrar el texto */
-  margin-bottom: 20px; /* espacio debajo del título */
-}
-
-h1 {
-  color: #333333;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.info-box {
-  border: 1px solid #ccc; /* borde del recuadro */
-  border-radius: 10px; /* bordes redondos */
-  padding: 20px; /* espaciado interno */
-  background-color: #b1afaf; /* fondo del recuadro */
-  margin-bottom: 20px; /* espacio debajo del recuadro */
-}
-
-.info-item {
-  margin-bottom: 10px; /* espacio entre los elementos de información */
-}
-
-.edit-button {
-  margin-top: 10px;
-  --color: white;
-  font-size: 16px;
-}
-</style>

@@ -1,9 +1,10 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'new',
-  webDir: 'dist'
+  appId: 'com.fintrack.app',
+  appName: 'FinTrack',
+  webDir: 'dist',
+  bundledWebRuntime: false,
 };
 
 export default config;
