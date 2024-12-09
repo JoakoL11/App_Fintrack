@@ -1,71 +1,47 @@
 <template>
   <ion-menu content-id="main-content" @ionWillOpen="setMenuOpen(true)" @ionWillClose="setMenuOpen(false)">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Menú</ion-title>
+      <ion-toolbar color="primary">
+        <ion-title class="ion-text-center">
+          <strong>FinTrack</strong>
+        </ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content>
+      <ion-list lines="none">
+        <ion-menu-toggle :auto-hide="false" v-for="(p, i) in appPages" :key="i">
+          <ion-item
+            @click="navigateTo(p.url)"
+            :class="{ 'selected-item': currentRoute === p.url }"
+            :detail="false"
+            router-direction="root"
+            :router-link="p.url"
+          >
+            <ion-icon slot="start" :icon="p.icon"></ion-icon>
+            <ion-label>{{ p.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
       <ion-list>
-
-
-        <ion-item button @click="navigateTo('/home')">
-          <ion-thumbnail slot="start">
-            <img alt="Inicio" src="..\..\img\inicio.png" />
-          </ion-thumbnail>
-          <ion-label>Inicio</ion-label>
-        </ion-item>
-
-
-        <ion-item button @click="navigateTo('/investment')">
-          <ion-thumbnail slot="start">
-            <img alt="Investments" src="..\..\\img\inversion.png" />
-          </ion-thumbnail>
-          <ion-label>Inversion</ion-label>
-        </ion-item>
-
-        <ion-item button @click="navigateTo('/budget')">
-          <ion-thumbnail slot="start">
-            <img alt="Investments" src="..\..\\img\presupuesto.png" />
-          </ion-thumbnail>
-          <ion-label>Presupuesto</ion-label>
-        </ion-item>
-
-
-        <ion-item button @click="navigateTo('/transactions')">
-          <ion-thumbnail slot="start">
-            <img alt="Transactions" src="..\..\\img\transaccion.png" />
-          </ion-thumbnail>
-          <ion-label>Transacciones</ion-label>
-        </ion-item>
-
-      
-        <ion-item button @click="navigateTo('/reports')">
-          <ion-thumbnail slot="start">
-            <img alt="Repots" src="..\..\\img\reports.png" />
-          </ion-thumbnail>
-          <ion-label>Reportes</ion-label>
-        </ion-item>
-
+        <ion-item v-if="isAuthenticated" router-link="/home">Inicio</ion-item>
+        <ion-item v-if="isAuthenticated" router-link="/profile">Perfil</ion-item>
+        <ion-item v-else router-link="/login">Iniciar Sesión</ion-item>
       </ion-list>
     </ion-content>
   </ion-menu>
 
   <ion-page id="main-content" :class="{ 'menu-open': isMenuOpen }">
     <ion-header>
-      <ion-toolbar>
+      <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Menu</ion-title>
+        <ion-title>{{ pageTitle }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="navigateTo('/login')">
-            <img alt="User" src="..\..\\img\perfil.png" style="width: 24px; height: 24px;" />
-            <ion-label>Login</ion-label>
-          </ion-button>
           <ion-button @click="navigateTo('/profile')">
-            <img alt="Profile" src="..\..\\img\perfil.png" style="width: 24px; height: 24px;" />
-            <ion-label>Perfil</ion-label>
+            <ion-avatar>
+              <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y" />
+            </ion-avatar>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -77,12 +53,60 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { IonButtons, IonContent, IonHeader, IonMenu, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonThumbnail, IonLabel } from '@ionic/vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { getAuth } from 'firebase/auth';
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenu,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
+  IonAvatar,
+  IonMenuToggle,
+  IonButton,
+} from '@ionic/vue';
+import {
+  homeOutline,
+  trendingUpOutline,
+  walletOutline,
+  swapHorizontalOutline,
+  barChartOutline,
+} from 'ionicons/icons';
 
+// Variables y computadas
 const router = useRouter();
+const route = useRoute();
 const isMenuOpen = ref(false);
+
+const currentRoute = computed(() => route.path);
+
+const pageTitle = computed(() => {
+  const titles: { [key: string]: string } = {
+    '/home': 'Inicio',
+    '/investment': 'Inversiones',
+    '/budget': 'Presupuesto',
+    '/transactions': 'Transacciones',
+    '/reports': 'Informes',
+    '/profile': 'Perfil',
+  };
+  return titles[route.path] || 'FinTrack';
+});
+
+const appPages = [
+  { title: 'Inicio', url: '/home', icon: homeOutline },
+  { title: 'Inversiones', url: '/investment', icon: trendingUpOutline },
+  { title: 'Presupuesto', url: '/budget', icon: walletOutline },
+  { title: 'Transacciones', url: '/transactions', icon: swapHorizontalOutline },
+  { title: 'Informes', url: '/reports', icon: barChartOutline },
+];
 
 function navigateTo(path: string) {
   router.push(path);
@@ -91,37 +115,60 @@ function navigateTo(path: string) {
 function setMenuOpen(open: boolean) {
   isMenuOpen.value = open;
 }
+
+const isAuthenticated = computed(() => {
+  const auth = getAuth();
+  return !!auth.currentUser; // Verifica si el usuario está autenticado
+});
 </script>
 
 <style scoped>
-  ion-item {
-    --padding-start: 0;
-  }
+ion-menu {
+  --ion-background-color: var(--ion-color-light);
+  --ion-text-color: var(--ion-color-dark);
+  --ion-border-color: var(--ion-color-medium);
+}
 
-  /* estilo para cuando el menu esta abierto */
-  .menu-open {
-    background-color: rgba(48, 2, 2, 0.205); /* color fondo pagina cuando el menu esta abierto */
-    backdrop-filter: blur(15px); /* intente de hacer que el fondo se desenfoque, si no funciona del todo bien borrar backdrop-filter de abajito*/
-    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;/* aqui el backdrop-filter y cerrar en "ease;"*/
-  }
+ion-menu ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
 
-  /* estilo del menu */
-  ion-menu {
-    --background: #d60e0e; /* fondo menu */
-    --color: #070bff; /* color texto del menu */
-  }
+ion-menu ion-content {
+  --background: var(--ion-background-color);
+}
 
-  ion-menu .ion-content {
-    --padding-start: 16px;
-  }
+ion-menu ion-item {
+  --background: transparent;
+  --color: var(--ion-text-color);
+  --border-color: var(--ion-border-color);
+}
 
-  /* estilo, letra y fondo de lista */
-  ion-menu ion-item {
-    --background: #ffffff; /* fondo de los items del menu */
-    --color: #093a36; /* color del texto de los items del menu */
-  }
+ion-menu ion-item.selected-item {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
 
-  ion-menu ion-item:hover {
-    --background: #20a3b48f; /* fondo ítems del menu al pasar el mouse */
+ion-menu ion-icon {
+  color: var(--ion-color-primary);
+}
+
+ion-menu ion-item.selected-item ion-icon {
+  color: var(--ion-color-primary-contrast);
+}
+
+ion-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.menu-open ion-content {
+  margin-left: 250px;
+}
+
+@media (max-width: 576px) {
+  .menu-open ion-content {
+    margin-left: 0;
   }
+}
 </style>
