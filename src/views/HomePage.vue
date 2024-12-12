@@ -71,7 +71,7 @@
                 <h2>{{ transaction.description }}</h2>
                 <p>{{ formatDate(transaction.date) }}</p>
               </ion-label>
-              <ion-note slot="end" :color="transaction.amount < 0 ? 'danger' : 'success'">
+              <ion-note slot="end" :color="getTransactionColor(transaction)">
                 {{ formatCurrency(transaction.amount) }}
               </ion-note>
             </ion-item>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, 
@@ -94,17 +94,37 @@ import {
   walletOutline, trendingDownOutline, trendingUpOutline, addCircleOutline, 
   calculatorOutline, barChartOutline 
 } from 'ionicons/icons';
+import { useTransactionStore } from '@/store/Transactions.js';
+
+interface Transaction {
+  id: number;
+  description: string;
+  amount: number;
+  date: string;
+  type: 'Ingreso' | 'Gasto' | 'Impuesto';
+}
 
 const router = useRouter();
 
-const totalBalance = ref(500000);
-const totalExpenses = ref(20000);
-const totalIncome = ref(100000);
+const totalBalance = ref(0);
+const totalExpenses = ref(0);
+const totalIncome = ref(0);
 
-const recentTransactions = ref([
-  { id: 1, description: 'Compra de comida', amount: -5000, date: '2024-09-20' },
-  { id: 2, description: 'Pago de salario', amount: 200000, date: '2024-09-19' },
-]);
+const transactionStore = useTransactionStore();
+const recentTransactions = ref<Transaction[]>([]);
+
+onMounted(async () => {
+  await transactionStore.fetchTransactions();
+  calculateSummary();
+});
+
+const calculateSummary = () => {
+  const transactions = transactionStore.transactions;
+  totalIncome.value = transactions.filter((t: Transaction) => t.type === 'Ingreso').reduce((sum, t) => sum + t.amount, 0);
+  totalExpenses.value = Math.abs(transactions.filter((t: Transaction) => t.type === 'Gasto' || t.type === 'Impuesto').reduce((sum, t) => sum + t.amount, 0));
+  totalBalance.value = totalIncome.value - totalExpenses.value;
+  recentTransactions.value = transactions.slice(-5).reverse();
+};
 
 function navigateToTransactions() {
   router.push({ name: 'Transactions' });
@@ -129,6 +149,10 @@ function formatDate(dateString: string) {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Intl.DateTimeFormat('es-CL', options).format(new Date(dateString));
 }
+
+const getTransactionColor = (transaction: Transaction) => {
+  return transaction.type === 'Gasto' || transaction.type === 'Impuesto' ? 'danger' : 'success';
+};
 
 const goToAbout = () => {
   router.push('/about');

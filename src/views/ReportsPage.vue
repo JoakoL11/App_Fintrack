@@ -61,11 +61,10 @@
 
       <ion-card class="chart-card">
         <ion-card-header>
-          <ion-card-title>Gastos por Categoría</ion-card-title>
+          <ion-card-title>Balance de Transacciones</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <!-- Aquí iría el componente de gráfico, por ejemplo un gráfico de pastel -->
-          <p>Gráfico de gastos por categoría</p>
+          <BalanceChart :transactions="transactionStore.transactions" />
         </ion-card-content>
       </ion-card>
 
@@ -80,7 +79,7 @@
                 <h2>{{ transaction.description }}</h2>
                 <p>{{ formatDate(transaction.date) }}</p>
               </ion-label>
-              <ion-note slot="end" :color="getTransactionColor(transaction.amount)">
+              <ion-note slot="end" :color="getTransactionColor(transaction)">
                 {{ formatCurrency(transaction.amount) }}
               </ion-note>
             </ion-item>
@@ -99,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { 
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, 
   IonCardTitle, IonCardContent, IonItem, IonLabel, IonSelect, IonSelectOption, 
@@ -108,7 +107,15 @@ import {
 import { 
   trendingUpOutline, trendingDownOutline, walletOutline
 } from 'ionicons/icons';
-
+import { useTransactionStore } from '@/store/Transactions.js';
+import BalanceChart from '@/components/BalanceChart.vue';
+interface Transaction {
+  id: number;
+  description: string;
+  amount: number;
+  date: string;
+  type: 'Ingreso' | 'Gasto' | 'Impuesto';
+}
 const dateRange = ref('month');
 const startDate = ref('');
 const endDate = ref('');
@@ -118,39 +125,36 @@ const toastMessage = ref('');
 const totalIncome = ref(0);
 const totalExpenses = ref(0);
 
-// Datos de muestra para transacciones
-const allTransactions = ref([
-  { id: 1, description: 'Salario', amount: 1000000, date: '2024-09-01', type: 'income' },
-  { id: 2, description: 'Alquiler', amount: -300000, date: '2024-09-05', type: 'expense' },
-  { id: 3, description: 'Compras supermercado', amount: -100000, date: '2024-09-10', type: 'expense' },
-  { id: 4, description: 'Bono', amount: 200000, date: '2024-09-15', type: 'income' },
-  { id: 5, description: 'Restaurante', amount: -50000, date: '2024-09-20', type: 'expense' },
-  { id: 6, description: 'Salario', amount: 1000000, date: '2024-10-01', type: 'income' },
-  { id: 7, description: 'Alquiler', amount: -300000, date: '2024-10-05', type: 'expense' },
-  // ... Agrega más transacciones de muestra aquí ...
-]);
+const transactionStore = useTransactionStore();
 
-const recentTransactions = ref([]);
+
+const recentTransactions = ref<Transaction[]>([]);
+
+onMounted(async () => {
+  await transactionStore.fetchTransactions();
+  generateReport();
+});
+
 const generateReport = () => {
-  let filteredTransactions: typeof allTransactions.value = [];
+  let filteredTransactions: Transaction[] = [];
   const currentDate = new Date();
   
   switch(dateRange.value) {
     case 'week':
       const oneWeekAgo = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-      filteredTransactions = allTransactions.value.filter(t => new Date(t.date) >= oneWeekAgo);
+      filteredTransactions = transactionStore.transactions.filter((t: Transaction) => new Date(t.date) >= oneWeekAgo);
       break;
     case 'month':
       const oneMonthAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
-      filteredTransactions = allTransactions.value.filter(t => new Date(t.date) >= oneMonthAgo);
+      filteredTransactions = transactionStore.transactions.filter((t: Transaction) => new Date(t.date) >= oneMonthAgo);
       break;
     case 'year':
       const oneYearAgo = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), currentDate.getDate());
-      filteredTransactions = allTransactions.value.filter(t => new Date(t.date) >= oneYearAgo);
+      filteredTransactions = transactionStore.transactions.filter((t: Transaction) => new Date(t.date) >= oneYearAgo);
       break;
     case 'custom':
       if (startDate.value && endDate.value) {
-        filteredTransactions = allTransactions.value.filter(t => 
+        filteredTransactions = transactionStore.transactions.filter((t: Transaction) => 
           new Date(t.date) >= new Date(startDate.value) && 
           new Date(t.date) <= new Date(endDate.value)
         );
@@ -158,10 +162,10 @@ const generateReport = () => {
       break;
   }
   
-  totalIncome.value = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-  totalExpenses.value = Math.abs(filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0));
+  totalIncome.value = filteredTransactions.filter((t: Transaction) => t.type === 'Ingreso').reduce((sum, t) => sum + t.amount, 0);
+  totalExpenses.value = Math.abs(filteredTransactions.filter((t: Transaction) => t.type === 'Gasto' || t.type === 'Impuesto').reduce((sum, t) => sum + t.amount, 0));
   
-  recentTransactions.value = filteredTransactions.slice(-5).reverse() as { id: number; description: string; amount: number; date: string; type: string; }[];
+  recentTransactions.value = filteredTransactions.slice(-5).reverse();
   toastMessage.value = `Reporte generado para: ${dateRange.value}`;
   showToast.value = true;
 };
@@ -178,7 +182,7 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('es-CL', options);
 };
 
-const getTransactionColor = (amount: number) => {
-  return amount < 0 ? 'danger' : 'success';
+const getTransactionColor = (transaction: Transaction) => {
+  return transaction.type === 'Gasto' || transaction.type === 'Impuesto' ? 'danger' : 'success';
 };
 </script>

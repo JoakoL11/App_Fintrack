@@ -13,8 +13,8 @@
       </div>
 
       <!-- Lista de presupuestos -->
-      <ion-list v-if="budgets.length > 0">
-        <ion-item v-for="(budget, index) in budgets" :key="budget.id">
+      <ion-list v-if="budgetStore.budgets.length > 0">
+        <ion-item v-for="budget in budgetStore.budgets" :key="budget.id">
           <ion-card>
             <ion-card-content>
               <p><strong>Categoría:</strong> {{ budget.category }}</p>
@@ -121,7 +121,7 @@ import {
 import { useBudgetStore } from "@/store/Budget.js";
 
 const budgetStore = useBudgetStore();
-const budgets = budgetStore.budgets;
+const budgets = ref([]); // Array local para presupuesto
 
 // Estado para los modales y datos
 const isEditModalOpen = ref(false);
