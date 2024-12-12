@@ -144,7 +144,7 @@ const showAddTransactionModal = () => {
 
 const closeAddModal = () => {
   isAddModalOpen.value = false;
-  newTransaction.value = { description: '', amount: 0, type: '' };
+  newTransaction.value = { description: '', amount: 0, type: '', date: new Date().toISOString() };
 };
 // Funciones para manipular datos
 const addNewTransaction = async () => {
