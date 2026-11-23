@@ -12,7 +12,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@capacitor/android": "6.1.2",
+    "@capacitor/android": "6.2.2",
     "@capacitor/app": "6.0.1",
     "@capacitor/core": "6.1.2",
     "@capacitor/haptics": "6.0.1",
@@ -25,24 +25,24 @@
     "firebase": "^11.0.2",
     "ionicons": "^7.0.0",
     "pinia": "^2.2.8",
-    "vue": "^3.5.2",
+    "vue": "^3.5.46",
     "vue-currency-filter": "^5.2.0",
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.1.2",
-    "@vitejs/plugin-legacy": "^5.4.2",
-    "@vitejs/plugin-vue": "^4.6.2",
+    "@capacitor/cli": "8.6.2",
+    "@vitejs/plugin-legacy": "^8.2.4",
+    "@vitejs/plugin-vue": "^6.0.11",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.3.0",
-    "cypress": "^13.5.0",
+    "cypress": "^16.3.0",
     "eslint": "^8.35.0",
     "eslint-plugin-vue": "^9.9.0",
     "jsdom": "^22.1.0",
     "terser": "^5.4.0",
     "typescript": "^5.5.4",
-    "vite": "~5.2.0",
-    "vitest": "^0.34.6",
+    "vite": "~8.3.8",
+    "vitest": "^5.1.1",
     "vue-tsc": "^2.0.22"
   },
   "description": "An Ionic project"
